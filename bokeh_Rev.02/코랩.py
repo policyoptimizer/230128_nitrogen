@@ -1,6 +1,6 @@
 import numpy as np
 
-from bokeh.io import curdoc
+from bokeh.io import show
 from bokeh.layouts import column, row
 from bokeh.models import ColumnDataSource
 from bokeh.models.widgets import Slider, TextInput
@@ -51,5 +51,4 @@ for w in [offset, amplitude, phase, freq]:
 # Set up layouts and add to document
 inputs = column(text, offset, amplitude, phase, freq)
 
-curdoc().add_root(row(inputs, plot, width=800))
-curdoc().title = "Sliders"
+show(column(inputs, plot, width=800), title="Sliders")
