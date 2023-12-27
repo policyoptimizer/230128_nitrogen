@@ -21,33 +21,33 @@ def load_data():
 start_date = st.sidebar.date_input('시작 날짜', min_value=min(data['timestamp']), max_value=max(data['timestamp']), value=min(data['timestamp']))
 end_date = st.sidebar.date_input('종료 날짜', min_value=min(data['timestamp']), max_value=max(data['timestamp']), value=max(data['timestamp']))
 
-# 센서 목록을 데이터에서 동적으로 추출
-sensors = ['FI_S_105.PV_Value']  # 예시, 실제 센서 목록으로 대체
-for sensor in sensors:
-   inputs[sensor] = st.number_input(sensor, value=0.0)
+# # 센서 목록을 데이터에서 동적으로 추출
+# sensors = ['FI_S_105.PV_Value']  # 예시, 실제 센서 목록으로 대체
+# for sensor in sensors:
+#    inputs[sensor] = st.number_input(sensor, value=0.0)
 
-# 모델을 로드하는 함수 (실제 모델 파일 경로로 대체해야 함)
-@st.cache(allow_output_mutation=True)
-def load_model():
-   model = joblib.load('path/to/your/model.pkl')  # 실제 모델 파일로 대체
-   return model
+# # 모델을 로드하는 함수 (실제 모델 파일 경로로 대체해야 함)
+# @st.cache(allow_output_mutation=True)
+# def load_model():
+#    model = joblib.load('path/to/your/model.pkl')  # 실제 모델 파일로 대체
+#    return model
 
-# 앱에서 모델 사용
-model = load_model()
-if st.button('예측'):
-   X_new = pd.DataFrame([list(inputs.values())], columns=list(inputs.keys()))
-   y_pred = model.predict(X_new)
-   st.write('예측된 종속 변수 값:', y_pred)
+# # 앱에서 모델 사용
+# model = load_model()
+# if st.button('예측'):
+#    X_new = pd.DataFrame([list(inputs.values())], columns=list(inputs.keys()))
+#    y_pred = model.predict(X_new)
+#    st.write('예측된 종속 변수 값:', y_pred)
 
-if st.button('예측'):
-   # ... (예측 코드) ...
-   st.write('예측된 종속 변수 값:', y_pred)
-   st.bar_chart(y_pred)  # 예측 결과를 바 차트로 표시
+# if st.button('예측'):
+#    # ... (예측 코드) ...
+#    st.write('예측된 종속 변수 값:', y_pred)
+#    st.bar_chart(y_pred)  # 예측 결과를 바 차트로 표시
 
-try:
-   # 데이터 로딩 및 예측 코드
-except Exception as e:
-   st.error(f"오류 발생: {e}")
+# try:
+#    # 데이터 로딩 및 예측 코드
+# except Exception as e:
+#    st.error(f"오류 발생: {e}")
 
 ######
 # file_id = '1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V'
