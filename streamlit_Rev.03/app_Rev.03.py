@@ -23,11 +23,15 @@ def parse_timestamp(ts):
 
 @st.cache(allow_output_mutation=True)
 def load_data():
-   url = 'https://drive.google.com/uc?id=1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V'
-   output = 'combined_df.csv'
-   gdown.download(url, output, quiet=False)
-   df = pd.read_csv(output)
-   return df
+  try:
+      url = 'https://drive.google.com/uc?id=1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V'
+      output = 'combined_df.csv'
+      gdown.download(url, output, quiet=False)
+      df = pd.read_csv(output)
+      return df
+  except Exception as e:
+      st.error(f'데이터 로딩 중 오류가 발생했습니다: {e}')
+      return pd.DataFrame()  # 오류 발생시 빈 DataFrame 반환​
 
 data = load_data()  # 데이터 로드
 
