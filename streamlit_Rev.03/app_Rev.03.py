@@ -8,8 +8,9 @@ from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor
 
 # 공유 가능한 링크에서 파일 ID를 추출합니다
-
 # stream_df > nov.csv
+# https://drive.google.com/file/d/1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V/view?usp=sharing
+
 file_id = '1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V'
 url = f'https://drive.google.com/uc?id={file_id}'
 
