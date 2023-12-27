@@ -11,6 +11,16 @@ from sklearn.ensemble import RandomForestRegressor
 # stream_df > nov.csv
 # https://drive.google.com/file/d/1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V/view?usp=sharing
 
+def parse_timestamp(ts):
+   if pd.isnull(ts):
+       return np.nan
+   if isinstance(ts, str):
+       try:
+           return datetime.strptime(ts, '%Y-%m-%d %p %I:%M')
+       except ValueError:
+           return np.nan
+   return np.nan
+
 @st.cache(allow_output_mutation=True)
 def load_data():
    url = 'https://drive.google.com/uc?id=1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V'
@@ -22,25 +32,34 @@ def load_data():
 
 data = load_data()  # 데이터 로드
 
-# 날짜 선택 위젯
-start_date = st.sidebar.date_input('시작 날짜', value=pd.to_datetime('2023-01-01'))
-end_date = st.sidebar.date_input('종료 날짜', value=pd.to_datetime('2023-01-31'))
+# 사용자로부터 날짜 범위 입력 받기
+start_date = st.sidebar.date_input('시작 날짜', datetime(2023, 1, 1))
+end_date = st.sidebar.date_input('종료 날짜', datetime(2023, 1, 31))
 
-# 필터링된 센서 데이터프레임 생성
-filtered_dataframes = {}
-for timestamp_col, df in sensor_dataframes.items():
-   # 가정: 각 df는 timestamp_col을 포함하고 있으며, 이는 datetime으로 변환될 수 있습니다.
-   filtered_df = df[(pd.to_datetime(df[timestamp_col]) >= start_date) &
-                    (pd.to_datetime(df[timestamp_col]) <= end_date)]
-   filtered_dataframes[timestamp_col] = filtered_df
+timestamp_cols = [col for col in data.columns if 'PV_Timestamp' in col]
+sensor_dataframes = {}
+
+for timestamp_col in timestamp_cols:
+   # 타임스탬프 파싱 및 정렬
+   data[timestamp_col] = data[timestamp_col].apply(parse_timestamp)
+   data.sort_values(by=timestamp_col, inplace=True)
+
+   # 센서 값 칼럼 이름 추출 및 해당 센서 데이터 선택
+   value_col = timestamp_col.replace('Timestamp', 'Value')
+   sensor_df = data[[timestamp_col, value_col]].dropna()
+   sensor_df.fillna(method='ffill', inplace=True)
+
+   # 사용자가 선택한 날짜 범위에 따라 데이터 필터링
+   filtered_sensor_df = sensor_df[(sensor_df[timestamp_col] >= start_date) & (sensor_df[timestamp_col] <= end_date)]
+   sensor_dataframes[timestamp_col] = filtered_sensor_df
 
 # 시각화
 st.subheader('선택한 기간 동안의 센서 값')
 fig, ax = plt.subplots(figsize=(15, 10))
 
-for timestamp_col, sensor_df in filtered_dataframes.items():
+for timestamp_col, sensor_df in sensor_dataframes.items():
    value_col = timestamp_col.replace('Timestamp', 'Value')
-   ax.plot(pd.to_datetime(sensor_df[timestamp_col]), sensor_df[value_col], label=value_col)
+   ax.plot(sensor_df[timestamp_col], sensor_df[value_col], label=value_col)
 
 ax.set_xlabel('Timestamp')
 ax.set_ylabel('Value')
