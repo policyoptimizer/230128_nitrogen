@@ -27,7 +27,6 @@ def load_data():
    output = 'combined_df.csv'
    gdown.download(url, output, quiet=False)
    df = pd.read_csv(output)
-   df['FI_S_105.PV_Timestamp'] = pd.to_datetime(df['FI_S_105.PV_Timestamp'])  # 타임스탬프를 datetime 형식으로 변환
    return df
 
 data = load_data()  # 데이터 로드
