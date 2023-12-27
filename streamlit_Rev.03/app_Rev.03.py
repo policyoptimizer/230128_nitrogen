@@ -18,6 +18,9 @@ def load_data():
    gdown.download(url, output, quiet=False)
    return pd.read_csv(output)
 
+start_date = st.sidebar.date_input('시작 날짜', min_value=min(data['timestamp']), max_value=max(data['timestamp']), value=min(data['timestamp']))
+end_date = st.sidebar.date_input('종료 날짜', min_value=min(data['timestamp']), max_value=max(data['timestamp']), value=max(data['timestamp']))
+
 ######
 # file_id = '1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V'
 # url = f'https://drive.google.com/uc?id={file_id}'
