@@ -22,20 +22,29 @@ def load_data():
 
 data = load_data()  # 데이터 로드
 
-# 날짜 선택 위젯 수정
-start_date = st.sidebar.date_input('시작 날짜', value=min(data['FI_S_105.PV_Timestamp'].dropna()))
-end_date = st.sidebar.date_input('종료 날짜', value=max(data['FI_S_105.PV_Timestamp'].dropna()))
+# 날짜 선택 위젯
+start_date = st.sidebar.date_input('시작 날짜', value=pd.to_datetime('2023-01-01'))
+end_date = st.sidebar.date_input('종료 날짜', value=pd.to_datetime('2023-01-31'))
 
-# 데이터 유형과 필터링 문제를 디버깅하기 위한 추가 정보 출력
-st.write('선택한 시작 날짜:', start_date)
-st.write('선택한 종료 날짜:', end_date)
-st.write('데이터 유형 (시작 날짜):', type(start_date))
-st.write('데이터 유형 (FI_S_105.PV_Timestamp):', data['FI_S_105.PV_Timestamp'].dtype)
+# 필터링된 센서 데이터프레임 생성
+filtered_dataframes = {}
+for timestamp_col, df in sensor_dataframes.items():
+   # 가정: 각 df는 timestamp_col을 포함하고 있으며, 이는 datetime으로 변환될 수 있습니다.
+   filtered_df = df[(pd.to_datetime(df[timestamp_col]) >= start_date) &
+                    (pd.to_datetime(df[timestamp_col]) <= end_date)]
+   filtered_dataframes[timestamp_col] = filtered_df
 
-try:
-   # 필터링된 데이터 프레임 생성
-   filtered_df = data[(data['FI_S_105.PV_Timestamp'] >= pd.to_datetime(start_date)) &
-                      (data['FI_S_105.PV_Timestamp'] <= pd.to_datetime(end_date))]
-   st.write(filtered_df)
-except Exception as e:
-   st.error(f"오류 발생: {e}")
+# 시각화
+st.subheader('선택한 기간 동안의 센서 값')
+fig, ax = plt.subplots(figsize=(15, 10))
+
+for timestamp_col, sensor_df in filtered_dataframes.items():
+   value_col = timestamp_col.replace('Timestamp', 'Value')
+   ax.plot(pd.to_datetime(sensor_df[timestamp_col]), sensor_df[value_col], label=value_col)
+
+ax.set_xlabel('Timestamp')
+ax.set_ylabel('Value')
+ax.set_title('Sensor Values Over Time (Filtered)')
+ax.legend()
+
+st.pyplot(fig)
