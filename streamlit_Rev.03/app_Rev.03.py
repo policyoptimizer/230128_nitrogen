@@ -22,21 +22,20 @@ def load_data():
 
 data = load_data()  # 데이터 로드
 
-# 날짜 선택 위젯
-start_date = st.sidebar.date_input(
-   '시작 날짜',
-   min_value=min(data['FI_S_105.PV_Timestamp']),
-   max_value=max(data['FI_S_105.PV_Timestamp']),
-   value=min(data['FI_S_105.PV_Timestamp'])
-)
+# 날짜 선택 위젯 수정
+start_date = st.sidebar.date_input('시작 날짜', value=min(data['FI_S_105.PV_Timestamp'].dropna()))
+end_date = st.sidebar.date_input('종료 날짜', value=max(data['FI_S_105.PV_Timestamp'].dropna()))
 
-end_date = st.sidebar.date_input(
-   '종료 날짜',
-   min_value=min(data['FI_S_105.PV_Timestamp']),
-   max_value=max(data['FI_S_105.PV_Timestamp']),
-   value=max(data['FI_S_105.PV_Timestamp'])
-)
+# 데이터 유형과 필터링 문제를 디버깅하기 위한 추가 정보 출력
+st.write('선택한 시작 날짜:', start_date)
+st.write('선택한 종료 날짜:', end_date)
+st.write('데이터 유형 (시작 날짜):', type(start_date))
+st.write('데이터 유형 (FI_S_105.PV_Timestamp):', data['FI_S_105.PV_Timestamp'].dtype)
 
-# 필터링된 데이터 프레임 생성 및 표시
-filtered_df = data[(data['FI_S_105.PV_Timestamp'] >= start_date) & (data['FI_S_105.PV_Timestamp'] <= end_date)]
-st.write(filtered_df)
+try:
+   # 필터링된 데이터 프레임 생성
+   filtered_df = data[(data['FI_S_105.PV_Timestamp'] >= pd.to_datetime(start_date)) &
+                      (data['FI_S_105.PV_Timestamp'] <= pd.to_datetime(end_date))]
+   st.write(filtered_df)
+except Exception as e:
+   st.error(f"오류 발생: {e}")
