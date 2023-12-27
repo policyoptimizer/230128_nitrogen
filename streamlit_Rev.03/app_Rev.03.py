@@ -17,7 +17,7 @@ def load_data():
    output = 'combined_df.csv'
    gdown.download(url, output, quiet=False)
    df = pd.read_csv(output)
-   df['timestamp'] = pd.to_datetime(df['timestamp'])  # 'timestamp'를 datetime 형식으로 변환 (필요한 경우)
+   df['FI_S_105.PV_Timestamp'] = pd.to_datetime(df['FI_S_105.PV_Timestamp'])  # 타임스탬프를 datetime 형식으로 변환
    return df
 
 data = load_data()  # 데이터 로드
@@ -25,18 +25,18 @@ data = load_data()  # 데이터 로드
 # 날짜 선택 위젯
 start_date = st.sidebar.date_input(
    '시작 날짜',
-   min_value=min(data['timestamp']),
-   max_value=max(data['timestamp']),
-   value=min(data['timestamp'])
+   min_value=min(data['FI_S_105.PV_Timestamp']),
+   max_value=max(data['FI_S_105.PV_Timestamp']),
+   value=min(data['FI_S_105.PV_Timestamp'])
 )
 
 end_date = st.sidebar.date_input(
    '종료 날짜',
-   min_value=min(data['timestamp']),
-   max_value=max(data['timestamp']),
-   value=max(data['timestamp'])
+   min_value=min(data['FI_S_105.PV_Timestamp']),
+   max_value=max(data['FI_S_105.PV_Timestamp']),
+   value=max(data['FI_S_105.PV_Timestamp'])
 )
 
 # 필터링된 데이터 프레임 생성 및 표시
-filtered_df = data[(data['timestamp'] >= start_date) & (data['timestamp'] <= end_date)]
+filtered_df = data[(data['FI_S_105.PV_Timestamp'] >= start_date) & (data['FI_S_105.PV_Timestamp'] <= end_date)]
 st.write(filtered_df)
