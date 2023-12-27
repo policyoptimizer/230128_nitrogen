@@ -11,20 +11,28 @@ from sklearn.ensemble import RandomForestRegressor
 # stream_df > nov.csv
 # https://drive.google.com/file/d/1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V/view?usp=sharing
 
-file_id = '1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V'
-url = f'https://drive.google.com/uc?id={file_id}'
+@st.cache(allow_output_mutation=True)
+def load_data():
+   url = 'https://drive.google.com/uc?id=1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V'
+   output = 'combined_df.csv'
+   gdown.download(url, output, quiet=False)
+   return pd.read_csv(output)
+######
+# file_id = '1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V'
+# url = f'https://drive.google.com/uc?id={file_id}'
 
-# 임시 파일 경로
-output = 'combined_df.csv'
+# # 임시 파일 경로
+# output = 'combined_df.csv'
 
-# Google 드라이브에서 파일 다운로드
-gdown.download(url, output, quiet=False)
+# # Google 드라이브에서 파일 다운로드
+# gdown.download(url, output, quiet=False)
 
-# 데이터 불러오기
-combined_df = pd.read_csv(output)
+# # 데이터 불러오기
+# combined_df = pd.read_csv(output)
 
 # Streamlit 앱에 데이터를 표시합니다 (예시)
 st.write(combined_df.head())
+######
 
 # # Streamlit 앱의 제목 설정
 # st.title('최적 질소 건조 SP 설정')
