@@ -17,6 +17,7 @@ def load_data():
    output = 'combined_df.csv'
    gdown.download(url, output, quiet=False)
    return pd.read_csv(output)
+
 ######
 # file_id = '1-1i_FLEQCP4MOL9VFg8fMwt2OLMscO7V'
 # url = f'https://drive.google.com/uc?id={file_id}'
@@ -31,7 +32,7 @@ def load_data():
 # combined_df = pd.read_csv(output)
 
 # Streamlit 앱에 데이터를 표시합니다 (예시)
-st.write(combined_df.head())
+# st.write(combined_df.head())
 ######
 
 # # Streamlit 앱의 제목 설정
