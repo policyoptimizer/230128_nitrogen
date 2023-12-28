@@ -36,7 +36,7 @@ def load_data():
 data = load_data()  # 데이터 로드
 
 # 사용자로부터 날짜 범위 입력 받기
-start_date = st.sidebar.date_input('시작 날짜', datetime(2023, 10, 1))
+start_date = st.sidebar.date_input('시작 날짜', datetime(2023, 10, 15))
 end_date = st.sidebar.date_input('종료 날짜', datetime(2023, 10, 31))
 
 timestamp_cols = [col for col in data.columns if 'PV_Timestamp' in col]
